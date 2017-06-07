@@ -1,0 +1,13 @@
+<table style="line-height:0; border-spacing:0; margin: 50px 0 0 0;" align="center" oncontextmenu="return false;">
+  <tr *ngFor="let row of board">
+    <td *ngFor="let cell of row" style="padding:0">
+      <img *ngIf="isCovered(cell); else uncovered"
+           (click)="handleCellClicked(cell)"
+           (contextmenu)="cell.isFlagged = !cell.isFlagged"
+           [src]="cell.isFlagged ? './../../assets/flag.png' : './../../assets/covered.png'" />
+      <ng-template #uncovered>
+        <img [src]="cell.img" />
+      </ng-template>
+    </td>
+  </tr>
+</table>

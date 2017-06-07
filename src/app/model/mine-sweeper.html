@@ -1,0 +1,7 @@
+<div>
+  <select [(ngModel)]="model" (ngModelChange)="boardSize = $event">
+    <option *ngFor="let level of levels" [ngValue]="level.value">{{level.name}}</option>
+  </select>
+  <button (click)="board.initBoard(boardSize)">Start New Game</button>
+  <board *ngIf="boardSize" [size]="boardSize" #board></board>
+</div>
