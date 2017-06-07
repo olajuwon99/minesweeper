@@ -20,11 +20,6 @@ export class BoardComponent {
     this.initBoard(size);
   }
 
-  @Input('restart')
-  set restart(event: any) {
-    this.initBoard(this._boardSize);
-  }
-
   handleCellClicked(cell: Cell): void {
     cell.setUnCovered();
     if (cell.containsMine()) {
@@ -40,10 +35,10 @@ export class BoardComponent {
     return cell.isCovered();
   }
 
-  private initBoard(boardSize: number) {
+  initBoard(boardSize: number) {
     this.board = [];
     this.createCells(boardSize);
-    this.setCellImage(boardSize);
+    this.setCellsImage(boardSize);
   }
 
   private createCells(boardSize: number) {
@@ -55,7 +50,7 @@ export class BoardComponent {
     }
   }
 
-  private setCellImage(boardSize: number) {
+  private setCellsImage(boardSize: number) {
     for (let row = 0; row < boardSize; row++) {
       for (let column = 0; column < boardSize; column++) {
         const cell: Cell = this.board[row][column];
