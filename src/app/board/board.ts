@@ -54,17 +54,17 @@ export class BoardComponent {
     this.board.forEach((row: Array<Cell>) => {
       row.filter((cell: Cell) => !cell.containsMine())
          .map((cell: Cell) => {
-           const adjacentMinesCount: number = this.countAdjacentMines(cell.getRow(), cell.getColumn());
+           const adjacentMinesCount: number = this.countAdjacentMines(cell);
            cell.setEmpty(adjacentMinesCount === 0);
            cell.setImage(adjacentMinesCount)
          })
     });
   }
 
-  private countAdjacentMines(row: number, column: number): number {
+  private countAdjacentMines(cell: Cell): number {
     let count: number = 0;
 
-    this.iterateOnAdjacentCells(row, column, (cell: Cell) => {
+    this.iterateOnAdjacentCells(cell.getRow(), cell.getColumn(), (cell: Cell) => {
       if (cell && cell.containsMine()) count++;
     });
 
