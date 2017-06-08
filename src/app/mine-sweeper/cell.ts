@@ -45,6 +45,10 @@ export class Cell {
     }
   }
 
+  getImage(): string {
+    return this.img;
+  }
+
   getRow(): number {
     return this.row;
   }

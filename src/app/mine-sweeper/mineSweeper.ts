@@ -11,11 +11,17 @@ import {BoardComponent} from './board';
 export class MineSweeperComponent {
   levels = [{name: 'Beginner', value: 6}, {name: 'Intermediate', value: 10}, {name: 'Expert', value: 14}];
   boardSize: number;
+  private buttonLabel: string = 'New Game';
 
   @ViewChild(BoardComponent)
   private boardComponent: BoardComponent;
 
   initBoard(boardSize: number): void {
+    this.buttonLabel = 'New Game';
     this.boardComponent.initBoard(boardSize);
+  }
+
+  setButtonText(event) {
+    this.buttonLabel = 'Woo hoo You Won!';
   }
 }

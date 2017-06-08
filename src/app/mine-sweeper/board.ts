@@ -1,7 +1,7 @@
 /**
  * Created by hopsh01 on 6/2/2017.
  */
-import {Component, Input} from "@angular/core";
+import {Component, Input, Output, EventEmitter} from "@angular/core";
 import {Cell} from "./cell";
 
 @Component({
@@ -13,6 +13,11 @@ export class BoardComponent {
   board: Cell[][];
 
   private _boardSize: number;
+  private uncoveredCells: number;
+  private mineCount: number;
+
+  @Output()
+  hasWon: EventEmitter<boolean> = new EventEmitter();
 
   @Input('size')
   set boardSize(size: number) {
@@ -20,12 +25,10 @@ export class BoardComponent {
     this.initBoard(size);
   }
 
-  handleCellClicked(cell: Cell): void {
-    cell.setUnCovered();
+  cellClicked(cell: Cell): void {
+    this.uncoverCell(cell);
     if (cell.containsMine()) {
       this.lostGame(cell);
-    } else if (this.checkWinStatus()) {
-      this.wonGame();
     } else {
       this.exposeEmptyAdjacentCells(cell);
     }
@@ -37,15 +40,29 @@ export class BoardComponent {
 
   initBoard(boardSize: number) {
     this.board = [];
+    this.uncoveredCells = 0;
+    this.mineCount = 0;
     this.createCells(boardSize);
     this.setCellsImage();
+  }
+
+  handleCoveredCell(cell: Cell): string {
+    if (this.hasWonGame()) {
+      return cell.getImage();
+    } else if (cell.isFlagged) {
+      return './../../assets/flag.png';
+    } else {
+      return './../../assets/covered.png';
+    }
   }
 
   private createCells(boardSize: number) {
     for (let row = 0; row < boardSize; row++) {
       this.board[row] = [];
       for (let column = 0; column < boardSize; column++) {
-        this.board[row][column] = new Cell(row, column);
+        let cell = new Cell(row, column);
+        if (cell.containsMine()) this.mineCount++;
+        this.board[row][column] = cell;
       }
     }
   }
@@ -81,11 +98,6 @@ export class BoardComponent {
     setTimeout(() => this.initBoard(this._boardSize), 1000);
   }
 
-  private wonGame(): void {
-    alert('you have won!');
-    this.uncoverMines();
-  }
-
   private exposeEmptyAdjacentCells(cell: Cell): void {
     const row = cell.getRow();
     const column = cell.getColumn();
@@ -108,7 +120,7 @@ export class BoardComponent {
   private uncoverEmptyCell(cell: Cell) {
     if (cell && cell.isCovered()) {
       if (!cell.containsMine()) {
-        cell.setUnCovered();
+        this.uncoverCell(cell);
       }
       if (cell.isEmpty()) {
         this.exposeEmptyAdjacentCells(cell);
@@ -116,23 +128,19 @@ export class BoardComponent {
     }
   }
 
-  private checkWinStatus(): boolean {
-    for (let row = 0; row < this._boardSize; row++) {
-      for (let column = 0; column < this._boardSize; column++) {
-        const cell: Cell = this.board[row][column];
-        if (cell.isCovered() && (cell.isEmpty() || !cell.containsMine())) {
-          return false;
-        }
-      }
+  private hasWonGame(): boolean {
+    const hasWon = (this._boardSize * this._boardSize) - this.uncoveredCells === this.mineCount;
+
+    if (hasWon) {
+      this.hasWon.emit(true);
     }
 
-    return true;
+    return hasWon;
   }
 
-  private uncoverMines(): void {
-    this.board.forEach((row: Array<Cell>) => {
-      row.filter((cell: Cell) => cell.isCovered() && cell.containsMine())
-         .map((cell: Cell) => cell.setUnCovered())
-    });
+  private uncoverCell(cell: Cell) {
+    cell.setUnCovered();
+    this.uncoveredCells++;
   }
+
 }
