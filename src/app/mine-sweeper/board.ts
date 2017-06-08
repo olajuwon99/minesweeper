@@ -2,7 +2,7 @@
  * Created by hopsh01 on 6/2/2017.
  */
 import {Component, Input} from "@angular/core";
-import {Cell} from "../Cell/cell";
+import {Cell} from "./cell";
 
 @Component({
   selector: 'board',

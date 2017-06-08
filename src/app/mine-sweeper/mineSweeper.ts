@@ -2,7 +2,7 @@
  * Created by hopsh01 on 6/2/2017.
  */
 import {Component, ViewChild} from "@angular/core";
-import {BoardComponent} from '../board/board';
+import {BoardComponent} from './board';
 
 @Component({
   selector: 'mine-sweeper',
