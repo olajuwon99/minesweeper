@@ -12,7 +12,7 @@ import {Cell} from "../Cell/cell";
 export class BoardComponent {
   board: Cell[][];
 
-   private _boardSize: number;
+  private _boardSize: number;
 
   @Input('size')
   set boardSize(size: number) {
@@ -23,9 +23,9 @@ export class BoardComponent {
   handleCellClicked(cell: Cell): void {
     cell.setUnCovered();
     if (cell.containsMine()) {
-      BoardComponent.lostGame(cell);
+      this.lostGame(cell);
     } else if (this.checkWinStatus()) {
-      BoardComponent.wonGame();
+      this.wonGame();
     } else {
       this.exposeEmptyAdjacentCells(cell);
     }
@@ -38,7 +38,7 @@ export class BoardComponent {
   initBoard(boardSize: number) {
     this.board = [];
     this.createCells(boardSize);
-    this.setCellsImage(boardSize);
+    this.setCellsImage();
   }
 
   private createCells(boardSize: number) {
@@ -50,17 +50,15 @@ export class BoardComponent {
     }
   }
 
-  private setCellsImage(boardSize: number) {
-    for (let row = 0; row < boardSize; row++) {
-      for (let column = 0; column < boardSize; column++) {
-        const cell: Cell = this.board[row][column];
-        if (!cell.containsMine()) {
-          const adjacentMinesCount: number = this.countAdjacentMines(row, column);
-          cell.setEmpty(adjacentMinesCount === 0);
-          cell.setImage(adjacentMinesCount)
-        }
-      }
-    }
+  private setCellsImage() {
+    this.board.forEach((row: Array<Cell>) => {
+      row.filter((cell: Cell) => !cell.containsMine())
+         .map((cell: Cell) => {
+           const adjacentMinesCount: number = this.countAdjacentMines(cell.getRow(), cell.getColumn());
+           cell.setEmpty(adjacentMinesCount === 0);
+           cell.setImage(adjacentMinesCount)
+         })
+    });
   }
 
   private countAdjacentMines(row: number, column: number): number {
@@ -77,13 +75,15 @@ export class BoardComponent {
     return this.board[row] ? this.board[row][column] : null;
   }
 
-  private static lostGame(cell: Cell): void {
+  private lostGame(cell: Cell): void {
     cell.setRedMine();
     alert('you have lost!');
+    setTimeout(() => this.initBoard(this._boardSize), 1000);
   }
 
-  private static wonGame() {
+  private wonGame(): void {
     alert('you have won!');
+    this.uncoverMines();
   }
 
   private exposeEmptyAdjacentCells(cell: Cell): void {
@@ -95,15 +95,13 @@ export class BoardComponent {
     });
   }
 
-
   private iterateOnAdjacentCells(row: number, column: number, callBack: (cell: Cell) => void) {
     [-1, 0, 1].forEach((i) => {
-      [-1, 0, 1].forEach((j) => {
-        if (i !== 0 || j !== 0) { // only neighbors allowed
-          let adjacentCell: Cell = this.getCell(row + i, column + j);
-          callBack(adjacentCell);
-        }
-      });
+      [-1, 0, 1].filter((j) => i !== 0 || j !== 0) // only neighbors allowed
+                .forEach((j) => {
+                  let adjacentCell: Cell = this.getCell(row + i, column + j);
+                  callBack(adjacentCell);
+                });
     });
   }
 
@@ -129,5 +127,12 @@ export class BoardComponent {
     }
 
     return true;
+  }
+
+  private uncoverMines(): void {
+    this.board.forEach((row: Array<Cell>) => {
+      row.filter((cell: Cell) => cell.isCovered() && cell.containsMine())
+         .map((cell: Cell) => cell.setUnCovered())
+    });
   }
 }
