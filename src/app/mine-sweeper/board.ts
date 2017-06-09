@@ -25,10 +25,11 @@ export class BoardComponent {
   }
 
   cellClicked(cell: Cell): void {
-    this.uncoverCell(cell);
+    cell.setUnCovered();
     if (cell.containsMine()) {
       this.lostGame(cell);
     } else {
+      this.uncoveredCells++;
       this.exposeEmptyAdjacentCells(cell);
     }
   }
@@ -118,7 +119,8 @@ export class BoardComponent {
   private uncoverEmptyCell(cell: Cell) {
     if (cell && cell.isCovered()) {
       if (!cell.containsMine()) {
-        this.uncoverCell(cell);
+        cell.setUnCovered();
+        this.uncoveredCells++;
       }
       if (cell.isEmpty()) {
         this.exposeEmptyAdjacentCells(cell);
@@ -135,10 +137,4 @@ export class BoardComponent {
 
     return hasWon;
   }
-
-  private uncoverCell(cell: Cell) {
-    cell.setUnCovered();
-    this.uncoveredCells++;
-  }
-
 }
