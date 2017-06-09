@@ -14,6 +14,7 @@ export class BoardComponent {
   private _boardSize: number;
   private uncoveredCells: number;
   private mineCount: number;
+  ignoreClicks: boolean;
 
   @Output()
   hasWon: EventEmitter<boolean> = new EventEmitter();
@@ -42,6 +43,7 @@ export class BoardComponent {
     this.board = [];
     this.uncoveredCells = 0;
     this.mineCount = 0;
+    this.ignoreClicks = false;
     this.createCells(boardSize);
     this.setCellsImage();
   }
@@ -94,6 +96,7 @@ export class BoardComponent {
 
   private lostGame(cell: Cell): void {
     cell.setRedMine();
+    this.ignoreClicks = true;
     this.hasWon.emit(false);
   }
 

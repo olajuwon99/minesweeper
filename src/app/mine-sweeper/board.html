@@ -2,7 +2,7 @@
   <tr *ngFor="let row of board">
     <td *ngFor="let cell of row" style="padding:0">
       <img *ngIf="isCovered(cell); else uncovered"
-           (click)="cellClicked(cell)"
+           (click)="ignoreClicks || cellClicked(cell)"
            (contextmenu)="cell.isFlagged = !cell.isFlagged"
            [src]="handleCoveredCell(cell) | pathResolver" />
       <ng-template #uncovered>
