@@ -1,14 +1,13 @@
 /**
  * Created by hopsh01 on 6/2/2017.
  */
-import {Component, Input, Output, EventEmitter} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {Cell} from "./cell";
 
 @Component({
   selector: 'board',
   templateUrl: './board.html'
 })
-
 export class BoardComponent {
   board: Cell[][];
 
@@ -94,8 +93,7 @@ export class BoardComponent {
 
   private lostGame(cell: Cell): void {
     cell.setRedMine();
-    alert('you have lost!');
-    setTimeout(() => this.initBoard(this._boardSize), 1000);
+    this.hasWon.emit(false);
   }
 
   private exposeEmptyAdjacentCells(cell: Cell): void {

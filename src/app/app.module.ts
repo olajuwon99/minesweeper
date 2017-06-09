@@ -4,12 +4,14 @@ import { FormsModule } from '@angular/forms';
 import {AppComponent} from './app.component';
 import {MineSweeperComponent} from './mine-sweeper/mineSweeper';
 import {BoardComponent} from './mine-sweeper/board';
+import {PathResolverPipe} from "../environments/pathResolverPipe";
 
 @NgModule({
   declarations: [
     AppComponent,
     MineSweeperComponent,
-    BoardComponent
+    BoardComponent,
+    PathResolverPipe
   ],
   imports: [
     BrowserModule, FormsModule

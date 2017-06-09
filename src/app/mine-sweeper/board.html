@@ -4,9 +4,9 @@
       <img *ngIf="isCovered(cell); else uncovered"
            (click)="cellClicked(cell)"
            (contextmenu)="cell.isFlagged = !cell.isFlagged"
-           [src]="handleCoveredCell(cell)" />
+           [src]="handleCoveredCell(cell) | pathResolver" />
       <ng-template #uncovered>
-        <img [src]="cell.img" />
+        <img [src]="cell.img | pathResolver" />
       </ng-template>
     </td>
   </tr>
