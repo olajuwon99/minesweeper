@@ -19,12 +19,6 @@ export class BoardComponent {
   @Output()
   hasWon: EventEmitter<boolean> = new EventEmitter();
 
-  @Input('size')
-  set boardSize(size: number) {
-    this._boardSize = size;
-    this.initBoard(size);
-  }
-
   cellClicked(cell: Cell): void {
     cell.setUnCovered();
     if (cell.containsMine()) {
@@ -41,6 +35,7 @@ export class BoardComponent {
 
   initBoard(boardSize: number) {
     this.board = [];
+    this._boardSize = boardSize;
     this.uncoveredCells = 0;
     this.mineCount = 0;
     this.ignoreClicks = false;

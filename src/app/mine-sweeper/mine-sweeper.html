@@ -2,11 +2,12 @@
   <div>
     <label for="select">
       Level:
-      <select id="select" [(ngModel)]="model" (ngModelChange)="boardSize = $event">
+      <select id="select" [(ngModel)]="boardSize" (ngModelChange)="initBoard(boardSize = $event)">
         <option *ngFor="let level of levels" [ngValue]="level.value">{{level.name}}</option>
       </select>
     </label>
-    <button (click)="initBoard(boardSize)" style="margin-left: 10px">{{buttonLabel}}</button>
+    <button (click)="initBoard(boardSize)" [disabled]="!boardSize"  style="margin-left: 10px">{{buttonLabel}}</button>
+    <div style="border: 1px solid; margin-top: 5px;">Elapsed Time: {{stopWatch}} seconds</div>
   </div>
-  <board *ngIf="boardSize" [size]="boardSize" (hasWon)="setButtonText($event)"></board>
+  <board [hidden]="!boardSize" (hasWon)="setButtonText($event)"></board>
 </div>
