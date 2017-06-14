@@ -12,6 +12,9 @@ import {Observable} from "rxjs/Observable";
   templateUrl: './mine-sweeper.html'
 })
 export class MineSweeperComponent implements OnInit {
+  static readonly NEW_GAME = 'New Game';
+  static readonly WON_GAME = 'Woo hoo You Won!';
+  static readonly LOST_GAME = 'oops! Try Again!';
 
   levels: Array<Object>;
   boardSize: number;
@@ -30,32 +33,45 @@ export class MineSweeperComponent implements OnInit {
     this.timer$ = TimerObservable.create(0, 1000);
   }
 
-  private initGame(): void {
-    this.buttonLabel = 'New Game';
-    this.stopWatch = 0;
-    this.isGameStatusSet = false;
-  }
-
   initBoard(boardSize: number): void {
+    if (!boardSize) return;
+
     this.initGame();
     this.initTimer();
     this.boardComponent.initBoard(boardSize);
   }
 
-  private initTimer() {
-    if (this.subscription)
-      this.subscription.unsubscribe();
-    this.subscription = this.timer$.subscribe((i) => this.stopWatch = i);
-  }
-
-  setButtonText(hasWon) {
+  setButtonText(hasWon): void {
     if (!this.isGameStatusSet) {
       this.isGameStatusSet = true; // this is a hack!
       setTimeout(() => { // timeout because of 'digest' issues of angular
-          this.buttonLabel = hasWon ? 'Woo hoo You Won!' : 'oops! Try Again!';
+          this.buttonLabel = hasWon ? MineSweeperComponent.WON_GAME : MineSweeperComponent.LOST_GAME;
           this.subscription.unsubscribe();
         }, 1
       );
     }
+  }
+
+  decideColor(): string {
+    switch (this.buttonLabel) {
+      case MineSweeperComponent.WON_GAME:
+        return 'mdl-button--primary';
+      case MineSweeperComponent.LOST_GAME:
+        return 'mdl-button--accent';
+      case MineSweeperComponent.NEW_GAME:
+        return '';
+    }
+  }
+
+  private initGame(): void {
+    this.buttonLabel = MineSweeperComponent.NEW_GAME;
+    this.stopWatch = 0;
+    this.isGameStatusSet = false;
+  }
+
+  private initTimer(): void {
+    if (this.subscription)
+      this.subscription.unsubscribe();
+    this.subscription = this.timer$.subscribe((i) => this.stopWatch = i);
   }
 }

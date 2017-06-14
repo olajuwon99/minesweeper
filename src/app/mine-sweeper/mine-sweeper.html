@@ -1,12 +1,17 @@
 <div style="display: flex; flex-direction: column; align-items: center;">
   <div>
-    <label for="select">
-      Level:
-      <select id="select" [(ngModel)]="boardSize" (ngModelChange)="initBoard(boardSize = $event)">
-        <option *ngFor="let level of levels" [ngValue]="level.value">{{level.name}}</option>
-      </select>
-    </label>
-    <button (click)="initBoard(boardSize)" [disabled]="!boardSize"  style="margin-left: 10px">{{buttonLabel}}</button>
+    <mdl-select label="Choose Level:"
+                [(ngModel)]="boardSize"
+                (ngModelChange)="initBoard(boardSize = $event)">
+      <mdl-option *ngFor="let level of levels" [value]="level.value">{{level.name}}</mdl-option>
+    </mdl-select>
+    <button (click)="initBoard(boardSize)"
+            [disabled]="!boardSize"
+            class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"
+            [ngClass]="decideColor()">
+      {{buttonLabel}}
+    </button>
+
     <div style="border: 1px solid; margin-top: 5px;">Elapsed Time: {{stopWatch}} seconds</div>
   </div>
   <board [hidden]="!boardSize" (hasWon)="setButtonText($event)"></board>

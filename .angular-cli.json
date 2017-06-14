@@ -19,9 +19,12 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css"
+        "styles.css",
+        "../node_modules/material-design-lite/material.min.css",
+        "../node_modules/@angular-mdl/popover/popover.scss",
+        "../node_modules/@angular-mdl/select/select.scss"
       ],
-      "scripts": [],
+      "scripts": ["../node_modules/material-design-lite/material.min.js"],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

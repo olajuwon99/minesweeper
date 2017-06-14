@@ -5,6 +5,7 @@ import {AppComponent} from './app.component';
 import {MineSweeperComponent} from './mine-sweeper/mineSweeper';
 import {BoardComponent} from './mine-sweeper/board';
 import {PathResolverPipe} from "../environments/pathResolverPipe";
+import { MdlSelectModule } from '@angular-mdl/select';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,7 @@ import {PathResolverPipe} from "../environments/pathResolverPipe";
     PathResolverPipe
   ],
   imports: [
-    BrowserModule, FormsModule
+    BrowserModule, FormsModule, MdlSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
