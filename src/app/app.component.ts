@@ -4,9 +4,9 @@ import {Component} from '@angular/core';
   selector: 'app-root',
   template: `
     <div style="text-align:center">
-      <h1>
+      <h3>
         Olajuwon's Classic Mine Sweeper!!
-      </h1>
+      </h3>
 
       <mine-sweeper></mine-sweeper>
     </div>

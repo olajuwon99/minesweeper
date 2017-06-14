@@ -1,8 +1,9 @@
-<div style="display: flex; flex-direction: column; align-items: center;">
+<div style="display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 10px;">
   <div>
     <mdl-select label="Choose Level:"
                 [(ngModel)]="boardSize"
-                (ngModelChange)="initBoard(boardSize = $event)">
+                (ngModelChange)="initBoard(boardSize = $event)"
+                style="padding-right: 5px;">
       <mdl-option *ngFor="let level of levels" [value]="level.value">{{level.name}}</mdl-option>
     </mdl-select>
     <button (click)="initBoard(boardSize)"
