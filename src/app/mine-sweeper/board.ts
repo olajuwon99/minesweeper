@@ -1,8 +1,9 @@
 /**
  * Created by hopsh01 on 6/2/2017.
  */
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import {Component} from "@angular/core";
 import {Cell} from "./cell";
+import {StatusService} from "./status.service";
 
 @Component({
   selector: 'board',
@@ -16,16 +17,17 @@ export class BoardComponent {
   private mineCount: number;
   ignoreClicks: boolean;
 
-  @Output()
-  hasWon: EventEmitter<boolean> = new EventEmitter();
+  constructor(private statusService: StatusService){}
 
   cellClicked(cell: Cell): void {
-    cell.setUnCovered();
+    this.uncoverCell(cell);
     if (cell.containsMine()) {
       this.lostGame(cell);
     } else {
-      this.uncoveredCells++;
       this.exposeEmptyAdjacentCells(cell);
+      if (this.hasWonGame()) {
+        this.gameWon();
+      }
     }
   }
 
@@ -92,7 +94,12 @@ export class BoardComponent {
   private lostGame(cell: Cell): void {
     cell.setRedMine();
     this.ignoreClicks = true;
-    this.hasWon.emit(false);
+    this.statusService.gameLost();
+  }
+
+  private gameWon(): void {
+    this.ignoreClicks = true;
+    this.statusService.gameWon();
   }
 
   private exposeEmptyAdjacentCells(cell: Cell): void {
@@ -114,11 +121,15 @@ export class BoardComponent {
     });
   }
 
+  private uncoverCell(cell: Cell) {
+    cell.setUnCovered();
+    this.uncoveredCells++;
+  }
+
   private uncoverEmptyCell(cell: Cell) {
     if (cell && cell.isCovered()) {
       if (!cell.containsMine()) {
-        cell.setUnCovered();
-        this.uncoveredCells++;
+        this.uncoverCell(cell);
       }
       if (cell.isEmpty()) {
         this.exposeEmptyAdjacentCells(cell);
@@ -127,12 +138,7 @@ export class BoardComponent {
   }
 
   private hasWonGame(): boolean {
-    const hasWon = (this._boardSize * this._boardSize) - this.uncoveredCells === this.mineCount;
-
-    if (hasWon) {
-      this.hasWon.emit(true);
-    }
-
-    return hasWon;
+    return (this._boardSize * this._boardSize) - this.uncoveredCells === this.mineCount;
   }
+
 }

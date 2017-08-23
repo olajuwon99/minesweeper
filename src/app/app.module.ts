@@ -6,6 +6,7 @@ import {MineSweeperComponent} from './mine-sweeper/mineSweeper';
 import {BoardComponent} from './mine-sweeper/board';
 import {PathResolverPipe} from "../environments/pathResolverPipe";
 import { MdlSelectModule } from '@angular-mdl/select';
+import {StatusService} from "./mine-sweeper/status.service";
 
 @NgModule({
   declarations: [
@@ -17,7 +18,7 @@ import { MdlSelectModule } from '@angular-mdl/select';
   imports: [
     BrowserModule, FormsModule, MdlSelectModule
   ],
-  providers: [],
+  providers: [StatusService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

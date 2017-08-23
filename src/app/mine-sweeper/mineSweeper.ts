@@ -6,6 +6,7 @@ import {BoardComponent} from "./board";
 import {TimerObservable} from "rxjs/observable/TimerObservable";
 import {Subscription} from "rxjs/Subscription";
 import {Observable} from "rxjs/Observable";
+import {StatusService} from "./status.service";
 
 @Component({
   selector: 'mine-sweeper',
@@ -21,16 +22,18 @@ export class MineSweeperComponent implements OnInit {
   buttonLabel: string;
   stopWatch: number;
   private timer$: Observable<number>;
-  private subscription: Subscription;
-  private isGameStatusSet: boolean;
+  private timerSubscription: Subscription;
 
   @ViewChild(BoardComponent)
   private boardComponent: BoardComponent;
+
+  constructor(private statusService: StatusService) {}
 
   ngOnInit(): void {
     this.initGame();
     this.levels = [{name: 'Beginner', value: 6}, {name: 'Intermediate', value: 10}, {name: 'Expert', value: 14}];
     this.timer$ = TimerObservable.create(0, 1000);
+    this.statusService.hasWonEvent.subscribe( (hasWon) => this.setButtonText(hasWon) )
   }
 
   initBoard(boardSize: number): void {
@@ -42,14 +45,8 @@ export class MineSweeperComponent implements OnInit {
   }
 
   setButtonText(hasWon): void {
-    if (!this.isGameStatusSet) {
-      this.isGameStatusSet = true; // this is a hack!
-      setTimeout(() => { // timeout because of 'digest' issues of angular
-          this.buttonLabel = hasWon ? MineSweeperComponent.WON_GAME : MineSweeperComponent.LOST_GAME;
-          this.subscription.unsubscribe();
-        }, 1
-      );
-    }
+    this.buttonLabel = hasWon ? MineSweeperComponent.WON_GAME : MineSweeperComponent.LOST_GAME;
+    this.timerSubscription.unsubscribe();
   }
 
   decideColor(): string {
@@ -66,12 +63,11 @@ export class MineSweeperComponent implements OnInit {
   private initGame(): void {
     this.buttonLabel = MineSweeperComponent.NEW_GAME;
     this.stopWatch = 0;
-    this.isGameStatusSet = false;
   }
 
   private initTimer(): void {
-    if (this.subscription)
-      this.subscription.unsubscribe();
-    this.subscription = this.timer$.subscribe((i) => this.stopWatch = i);
+    if (this.timerSubscription)
+      this.timerSubscription.unsubscribe();
+    this.timerSubscription = this.timer$.subscribe((i) => this.stopWatch = i);
   }
 }
