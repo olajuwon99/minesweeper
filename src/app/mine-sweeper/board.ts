@@ -80,9 +80,11 @@ export class BoardComponent {
   private countAdjacentMines(cell: Cell): number {
     let count: number = 0;
 
-    this.iterateOnAdjacentCells(cell.getRow(), cell.getColumn(), (cell: Cell) => {
+    const incrementMineCount: (cell: Cell) => void = (cell?: Cell): void => {
       if (cell && cell.containsMine()) count++;
-    });
+    };
+
+    this.iterateOnAdjacentCells(cell.getRow(), cell.getColumn(), incrementMineCount);
 
     return count;
   }
@@ -106,9 +108,7 @@ export class BoardComponent {
     const row = cell.getRow();
     const column = cell.getColumn();
 
-    this.iterateOnAdjacentCells(row, column, (adjacentCell: Cell) => {
-      this.uncoverEmptyCell(adjacentCell);
-    });
+    this.iterateOnAdjacentCells(row, column, this.uncoverEmptyCell.bind(this));
   }
 
   private iterateOnAdjacentCells(row: number, column: number, callBack: (cell: Cell) => void) {
