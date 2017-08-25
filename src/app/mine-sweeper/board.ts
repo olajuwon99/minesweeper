@@ -35,7 +35,7 @@ export class BoardComponent {
     return cell.isCovered();
   }
 
-  initBoard(boardSize: number) {
+  initBoard(boardSize: number): void {
     this.board = [];
     this._boardSize = boardSize;
     this.uncoveredCells = 0;
@@ -55,7 +55,7 @@ export class BoardComponent {
     }
   }
 
-  private createCells(boardSize: number) {
+  private createCells(boardSize: number): void {
     for (let row = 0; row < boardSize; row++) {
       this.board[row] = [];
       for (let column = 0; column < boardSize; column++) {
@@ -66,7 +66,7 @@ export class BoardComponent {
     }
   }
 
-  private setCellsImage() {
+  private setCellsImage(): void {
     this.board.forEach((row: Array<Cell>) => {
       row.filter((cell: Cell) => !cell.containsMine())
          .map((cell: Cell) => {
@@ -111,7 +111,7 @@ export class BoardComponent {
     this.iterateOnAdjacentCells(row, column, this.uncoverEmptyCell.bind(this));
   }
 
-  private iterateOnAdjacentCells(row: number, column: number, callBack: (cell: Cell) => void) {
+  private iterateOnAdjacentCells(row: number, column: number, callBack: (cell: Cell) => void): void {
     [-1, 0, 1].forEach((i) => {
       [-1, 0, 1].filter((j) => i !== 0 || j !== 0) // only neighbors allowed
                 .map((j) => {
@@ -121,12 +121,12 @@ export class BoardComponent {
     });
   }
 
-  private uncoverCell(cell: Cell) {
+  private uncoverCell(cell: Cell): void {
     cell.setUnCovered();
     this.uncoveredCells++;
   }
 
-  private uncoverEmptyCell(cell: Cell) {
+  private uncoverEmptyCell(cell: Cell): void {
     if (cell && cell.isCovered()) {
       if (!cell.containsMine()) {
         this.uncoverCell(cell);

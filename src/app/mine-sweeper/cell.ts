@@ -16,7 +16,7 @@ export class Cell {
     }
   }
 
-  private initMineCell() {
+  private initMineCell(): void {
     this.img = './../../assets/mine.png';
     this.empty = false;
   }
@@ -57,7 +57,7 @@ export class Cell {
     return this.column;
   }
 
-  setEmpty(empty: boolean) {
+  setEmpty(empty: boolean): void {
     this.empty = empty;
   }
 
