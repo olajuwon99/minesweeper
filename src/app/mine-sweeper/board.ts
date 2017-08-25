@@ -114,10 +114,10 @@ export class BoardComponent {
   private iterateOnAdjacentCells(row: number, column: number, callBack: (cell: Cell) => void) {
     [-1, 0, 1].forEach((i) => {
       [-1, 0, 1].filter((j) => i !== 0 || j !== 0) // only neighbors allowed
-                .forEach((j) => {
-                  let adjacentCell: Cell = this.getCell(row + i, column + j);
-                  callBack(adjacentCell);
-                });
+                .map((j) => {
+                  return this.getCell(row + i, column + j);
+                })
+                .forEach(callBack);
     });
   }
 
